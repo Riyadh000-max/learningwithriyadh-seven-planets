@@ -344,6 +344,8 @@
             font-size: 1.3em;
             color: #a29bfe;
             margin-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 10px;
         }
 
         .vocab-item {
@@ -436,46 +438,90 @@
         const SYLLABUS = {
             "planets": [
                 {
-                    "id": 1, "name": "Food Planet", "topic": "Ordering Food", "color": "#FF4136",
-                    "richExplanation": { "en": "Polite requests: Use 'I would like' or 'Can I get...'.", "ar": "الطلبات المهذبة: استخدم 'I would like' أو 'Can I get'." },
-                    "vocabulary": [{ "en": "Apple pie", "ar": "فطيرة تفاح" }, { "en": "Steak", "ar": "شريحة لحم" }],
-                    "practice": [{ "q": "How do you politely order an apple pie?", "options": ["Give me pie!", "I would like an apple pie, please.", "Want pie now."], "answer": 1, "feedback": { "en": "'I would like' is the polite standard.", "ar": "تعبير 'I would like' هو المعيار المهذب للطلب." } }]
+                    "id": 1, "name": "Food Planet", "topic": "Food Categories & Ordering", "color": "#FF4136",
+                    "richExplanation": {
+                        "en": "Countable nouns (apples) have plural forms. Uncountable nouns (water, rice) don't. Use 'a glass of' for liquids.",
+                        "ar": "الأسماء المعدودة لها صيغة جمع. غير المعدودة (ماء، أرز) ليس لها جمع. نستخدم 'a glass of' للسوائل."
+                    },
+                    "vocabulary": [{ "en": "Apple pie", "ar": "فطيرة تفاح" }, { "en": "Steak", "ar": "شريحة لحم" }, { "en": "Soft drinks", "ar": "مشروبات غازية" }],
+                    "practice": [
+                        { "q": "It's a type of desserts:", "options": ["Salad", "Soup", "Pasta", "Apple pie"], "answer": 3, "feedback": { "en": "Salad is a vegetable dish. Apple pie is sweet, so it is a dessert.", "ar": "خيار خاطئ. السلطة طبق خضار. فطيرة التفاح حلوة، لذا هي من الحلويات." } },
+                        { "q": "I'd like a glass ___ water.", "options": ["from", "on", "in", "of"], "answer": 3, "feedback": { "en": "We say 'a glass OF water' to show content.", "ar": "خيار خاطئ. نقول 'glass of water' لتحديد المحتوى." } }
+                    ]
                 },
                 {
-                    "id": 2, "name": "Routine Planet", "topic": "Adverbs of Frequency", "color": "#2ECC40",
-                    "richExplanation": { "en": "Frequency: Usually (80%), Often (60%). Position: Before main verb.", "ar": "التكرار: Usually (80%)، Often (60%). الموقع: قبل الفعل الأساسي." },
-                    "vocabulary": [{ "en": "Usually", "ar": "عادةً" }, { "en": "Often", "ar": "غالباً" }],
-                    "practice": [{ "q": "Where does 'usually' go? 'I ___ go to the gym.'", "options": ["usually", "go usually", "am usually"], "answer": 0, "feedback": { "en": "Adverbs go before the main verb 'go'.", "ar": "ظروف التكرار تأتي قبل الفعل الأساسي 'go'." } }]
+                    "id": 2, "name": "Routine Planet", "topic": "Present Simple & Adverbs", "color": "#2ECC40",
+                    "richExplanation": {
+                        "en": "Adverbs like Always/Usually go BEFORE main verb (He usually walks) but AFTER Verb 'To Be' (He is always late).",
+                        "ar": "ظروف التكرار (Always/Usually) تأتي قبل الفعل الأساسي وبعد فعل 'To Be'."
+                    },
+                    "vocabulary": [{ "en": "Usually", "ar": "عادة" }, { "en": "Often", "ar": "غالبا" }, { "en": "Once a week", "ar": "مرة في الأسبوع" }],
+                    "practice": [
+                        { "q": "Teachers ___ usually use webcams.", "options": ["Teachers", "Nurses", "Farmers", "businessmen"], "answer": 0, "feedback": { "en": "Teachers work in classrooms with webcams. Nurses work in hospitals.", "ar": "خيار خاطئ. المعلمون يستخدمون الكاميرات في الفصول، الممرضات يعملن في المستشفيات." } },
+                        { "q": "I work out ___ a week.", "options": ["one", "once", "two", "three"], "answer": 1, "feedback": { "en": "'One' is a number. 'Once' means 'one time'.", "ar": "خيار خاطئ. 'One' هو رقم. 'Once' تعني مرة واحدة." } }
+                    ]
                 },
                 {
                     "id": 3, "name": "Action Planet", "topic": "Present Continuous", "color": "#0074D9",
-                    "richExplanation": { "en": "Ongoing actions: [Am/Is/Are] + [Verb-ing].", "ar": "الأفعال المستمرة: [Am/Is/Are] + [الفعل-ing]." },
-                    "vocabulary": [{ "en": "Making soup", "ar": "صنع الحساء" }],
-                    "practice": [{ "q": "What is the correct form? 'She ___ soup.'", "options": ["is making", "making", "make"], "answer": 0, "feedback": { "en": "Need 'is' + 'verb-ing' for continuous actions.", "ar": "نحتاج 'is' + 'verb-ing' للأفعال المستمرة." } }]
+                    "richExplanation": {
+                        "en": "Ongoing actions: [Am/Is/Are] + [Verb-ing]. Drop 'e' for verbs like 'make' -> 'making'.",
+                        "ar": "الأفعال المستمرة: [Am/Is/Are] + [الفعل-ing]. نحذف 'e' في أفعال مثل 'make'."
+                    },
+                    "vocabulary": [{ "en": "Making soup", "ar": "يصنع حساء" }, { "en": "Running away", "ar": "يهرب" }, { "en": "Hanging out", "ar": "يتسكع" }],
+                    "practice": [
+                        { "q": "My sister is ___ a soup.", "options": ["breaking", "writing", "talking", "making"], "answer": 3, "feedback": { "en": "You 'make' food; you don't 'break' or 'write' it.", "ar": "خيار خاطئ. أنت 'تعد' الطعام؛ لا يمكنك كتابته أو كسره." } },
+                        { "q": "The thieves are running ___.", "options": ["away", "close", "on", "come"], "answer": 0, "feedback": { "en": "The phrasal verb 'run away' means to escape.", "ar": "خيار خاطئ. الفعل المركب 'run away' يعني يهرب." } }
+                    ]
                 },
                 {
-                    "id": 4, "name": "Quantity Planet", "topic": "Quantifiers", "color": "#DDDDDD",
-                    "richExplanation": { "en": "Uncountable: Too much. Countable: Too many.", "ar": "غير المعدود: Too much. المعدود: Too many." },
-                    "vocabulary": [{ "en": "Too much", "ar": "كثير جداً (للكمية)" }],
-                    "practice": [{ "q": "Use a quantifier for 'water': 'There is ___ water.'", "options": ["too many", "too much", "a few"], "answer": 1, "feedback": { "en": "Water is uncountable, so use 'too much'.", "ar": "الماء غير معدود، لذا نستخدم 'too much'." } }]
+                    "id": 4, "name": "Quantity Planet", "topic": "Quantifiers (Much/Many)", "color": "#DDDDDD",
+                    "richExplanation": {
+                        "en": "'Too' implies excessive. 'Much' = Uncountable. 'Many' = Countable. 'Some' = Positive.",
+                        "ar": "'Too' تعني زيادة مفرطة. 'Much' لغير المعدود. 'Many' للمعدود. 'Some' للجمل المثبتة."
+                    },
+                    "vocabulary": [{ "en": "Too much", "ar": "كثير جدا" }, { "en": "Salty", "ar": "مالح" }, { "en": "Juice", "ar": "عصير" }],
+                    "practice": [
+                        { "q": "The soup is ___ salty.", "options": ["too", "many", "much", "to"], "answer": 0, "feedback": { "en": "'Many' is for nouns we count. 'Too' is for adjectives like 'salty'.", "ar": "خيار خاطئ. 'Many' للمعدود. 'Too' للصفات مثل مالح." } },
+                        { "q": "There is ___ juice.", "options": ["some", "any", "are", "of"], "answer": 0, "feedback": { "en": "We use 'some' in positive sentences.", "ar": "خيار خاطئ. نستخدم 'some' في الجمل المثبتة." } }
+                    ]
                 },
                 {
-                    "id": 5, "name": "Ambition Planet", "topic": "Gerunds", "color": "#FFDC00",
-                    "richExplanation": { "en": "Gerunds (-ing) follow certain verbs like 'recommend'.", "ar": "صيغة المصدر (-ing) تتبع أفعالًا معينة مثل 'recommend'." },
-                    "vocabulary": [{ "en": "Recommend", "ar": "يوصي/يرشح" }],
-                    "practice": [{ "q": "Finish the sentence: 'I recommend ___ the story.'", "options": ["reading", "to read", "read"], "answer": 0, "feedback": { "en": "'Recommend' is followed by a gerund (-ing).", "ar": "فعل 'Recommend' يتبعه gerund (الفعل مضافاً له -ing)." } }]
+                    "id": 5, "name": "Ambition Planet", "topic": "Gerunds vs Infinitives", "color": "#FFDC00",
+                    "richExplanation": {
+                        "en": "Gerunds (-ing) act as nouns. Recommend is followed by a Gerund. Want is followed by an Infinitive (to be).",
+                        "ar": "Gerunds (-ing) تعمل كأسماء. 'Recommend' يتبعها Gerund، و 'Want' يتبعها Infinitive."
+                    },
+                    "vocabulary": [{ "en": "Recommend", "ar": "يوصي" }, { "en": "Want to be", "ar": "يريد أن يكون" }, { "en": "Know how", "ar": "يعرف كيف" }],
+                    "practice": [
+                        { "q": "I recommend ___ basketball.", "options": ["playing", "plays", "play", "played"], "answer": 0, "feedback": { "en": "The verb 'recommend' is always followed by -ing.", "ar": "خيار خاطئ. الفعل 'recommend' يتبعه دائماً فعل مضاف له ing." } },
+                        { "q": "I want ___ an engineer.", "options": ["to be", "be", "is", "are"], "answer": 0, "feedback": { "en": "After 'want', we must use 'to' + verb.", "ar": "خيار خاطئ. بعد 'want'، يجب أن نستخدم 'to' + الفعل." } }
+                    ]
                 },
                 {
-                    "id": 6, "name": "Location Planet", "topic": "Prepositions of Place", "color": "#85144b",
-                    "richExplanation": { "en": "Positions: Across from (opposite side).", "ar": "المواقع: Across from (الجانب المقابل)." },
-                    "vocabulary": [{ "en": "Across from", "ar": "مقابل/في الجهة الأخرى" }],
-                    "practice": [{ "q": "The bank is ___ the park. (On the other side)", "options": ["behind", "across from", "between"], "answer": 1, "feedback": { "en": "'Across from' means on the opposite side.", "ar": "تعبير 'Across from' يعني في الجهة المقابلة." } }]
+                    "id": 6, "name": "Locator Planet", "topic": "Prepositions & Relative Pronouns", "color": "#85144b",
+                    "richExplanation": {
+                        "en": "'Who' = People. 'Which' = Things. 'Across from' = Relative location (opposite side).",
+                        "ar": "'Who' للأشخاص. 'Which' للأشياء. 'Across from' للموقع المقابل."
+                    },
+                    "vocabulary": [{ "en": "Across from", "ar": "مقابل" }, { "en": "Behind", "ar": "خلف" }, { "en": "Which", "ar": "الذي (للأشياء)" }],
+                    "practice": [
+                        { "q": "The park is ___ the school.", "options": ["across from", "on", "between", "in"], "answer": 0, "feedback": { "en": "'On' means touching surface. Use 'across from' for the other side.", "ar": "خيار خاطئ. 'On' تعني على السطح. الحديقة في الجانب المقابل (across from)." } },
+                        { "q": "A company ___ builds roads.", "options": ["which", "who", "why", "what"], "answer": 0, "feedback": { "en": "'Who' is for people. A company is a thing, so use 'which'.", "ar": "خيار خاطئ. 'Who' للناس. الشركة شيء، لذا نستخدم 'which'." } }
+                    ]
                 },
                 {
                     "id": 7, "name": "Story Planet", "topic": "Mohammed's Story", "color": "#B10DC9",
-                    "richExplanation": { "en": "Mohammed is active. He went on a vacation to the beach.", "ar": "محمد نشيط. ذهب في إجازة إلى الشاطئ." },
-                    "vocabulary": [{ "en": "Vacation", "ar": "إجازة" }],
-                    "practice": [{ "q": "Where did Mohammed go for his vacation?", "options": ["The mountains", "The beach", "The city"], "answer": 1, "feedback": { "en": "The text says he went to the beach.", "ar": "النص يذكر أنه ذهب إلى الشاطئ." } }]
+                    "richExplanation": {
+                        "en": "Reading Text: Mohammed is busy. He plays basketball and works as a cashier. He is happy because he has a vacation next week.",
+                        "ar": "نص القراءة: محمد مشغول. يلعب كرة السلة ويعمل صرافاً. هو سعيد بوجود إجازة الأسبوع القادم."
+                    },
+                    "readingText": "Mohammed feels tired lately. He thinks he is too busy. He plays basketball for his school team. He also works three nights a week as a cashier at a grocery store. At home, he does his studies and homework. Mohammed wants more free time. He is very happy because he has a vacation next week!",
+                    "vocabulary": [{ "en": "Tired", "ar": "مُتعب" }, { "en": "Busy", "ar": "مشغول" }, { "en": "Cashier", "ar": "صراف" }, { "en": "Vacation", "ar": "إجازة" }],
+                    "practice": [
+                        { "q": "Who does Mohammed play basketball for?", "options": ["School team", "Friends"], "answer": 0, "feedback": { "en": "The text explicitly says 'school team'.", "ar": "خيار خاطئ. النص يذكر صراحة 'فريق المدرسة'." } },
+                        { "q": "How many nights does he work?", "options": ["Three", "Two"], "answer": 0, "feedback": { "en": "The text says 'three nights a week'.", "ar": "خيار خاطئ. النص يقول 'ثلاث ليالٍ في الأسبوع'." } },
+                        { "q": "Why does he feel tired?", "options": ["He is too busy", "He is not busy"], "answer": 0, "feedback": { "en": "He thinks he is too busy.", "ar": "خيار خاطئ. يعتقد أنه مشغول جداً." } }
+                    ]
                 }
             ]
         };
@@ -487,7 +533,7 @@
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
 
-        // Skybox
+        // --- Procedural Skybox ---
         const starGeo = new THREE.SphereGeometry(12000, 64, 64);
         const starTex = new THREE.CanvasTexture((() => {
             const c = document.createElement('canvas'); c.width = 2048; c.height = 1024; const ctx = c.getContext('2d');
@@ -519,6 +565,7 @@
 
             group.position.x = orbitDist; scene.add(group);
             planets.push({ group, angle: Math.random() * Math.PI * 2, orbit: orbitDist, speed: 0.0015 / (i + 1), data: p });
+            p.currentQ = 0; // State for tracking multiple questions
         });
 
         // --- Interaction & Controls ---
@@ -571,12 +618,12 @@
             document.getElementById('land-hud').style.display = near ? 'flex' : 'none';
         }
 
-        // --- UI & Feedback Bubble Logic ---
+        // --- UI & Feedback Logic ---
         function showFeedback(feedback) {
             const bubble = document.getElementById('feedback-bubble');
-            bubble.innerHTML = `<strong>Feedback:</strong><br>${feedback.en}<hr class="ar-text" style="color:#fff; opacity:0.3;">${feedback.ar}`;
+            bubble.innerHTML = `<strong>Try Again:</strong><br>${feedback.en}<hr class="ar-text" style="border:none; border-top:1px solid rgba(255,255,255,0.2);"><div class="ar-text">${feedback.ar}</div>`;
             bubble.style.display = 'block';
-            setTimeout(() => { bubble.style.display = 'none'; }, 5000);
+            setTimeout(() => { bubble.style.display = 'none'; }, 4000);
         }
 
         function openUI(data) {
@@ -602,15 +649,31 @@
             document.getElementById(type + '-node').classList.add('active');
             const panel = document.getElementById(type + '-content'); panel.classList.add('active');
             const p = activePlanetObj.data;
-            if (type === 'explanation') panel.innerHTML = `<h2>${p.topic}</h2><p>${p.richExplanation.en}</p><div class="ar-text">${p.richExplanation.ar}</div>`;
+
+            if (type === 'explanation') {
+                let html = `<h2>${p.topic}</h2>`;
+                if (p.readingText) html += `<div style="background:rgba(255,255,255,0.1); padding:15px; border-radius:10px; margin-bottom:15px;"><i>${p.readingText}</i></div>`;
+                html += `<p>${p.richExplanation.en}</p><div class="ar-text">${p.richExplanation.ar}</div>`;
+                panel.innerHTML = html;
+            }
             else if (type === 'vocabulary') panel.innerHTML = `<h2>Vocabulary</h2>` + p.vocabulary.map(v => `<div class="vocab-item"><strong>${v.en}</strong><br>${v.ar}</div>`).join('');
-            else if (type === 'practice') { const q = p.practice[0]; panel.innerHTML = `<h2>Quiz</h2><p>${q.q}</p>` + q.options.map((o, i) => `<button class="option-btn" onclick="checkAnswer(${i}, ${q.answer}, ${JSON.stringify(q.feedback).replace(/"/g, '&quot;')})">${o}</button>`).join(''); }
+            else if (type === 'practice') {
+                const q = p.practice[p.currentQ || 0];
+                panel.innerHTML = `<h2>Quiz</h2><p style="font-size:1.1em;">${q.q}</p>` + q.options.map((o, i) => `<button class="option-btn" onclick="checkAnswer(${i}, ${q.answer}, ${JSON.stringify(q.feedback).replace(/"/g, '&quot;')})">${o}</button>`).join('');
+            }
         }
 
         function checkAnswer(idx, correct, feedback) {
             if (idx === correct) {
-                alert("Excellent! Mission accomplished on this planet.");
-                closeUI();
+                const p = activePlanetObj.data;
+                if (p.currentQ < p.practice.length - 1) {
+                    p.currentQ++;
+                    togglePanel('practice');
+                } else {
+                    alert("Legendary! You've mastered all challenges on this planet.");
+                    p.currentQ = 0;
+                    closeUI();
+                }
             } else {
                 showFeedback(feedback);
             }
