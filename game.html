@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>The Grammar Galaxy: 360° Explorer</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #000;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #fff;
+            touch-action: none;
+        }
+
+        canvas {
+            display: block;
+        }
+
+        #instructions {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: #fff;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #0ff;
+            pointer-events: none;
+            font-size: 14px;
+            backdrop-filter: blur(5px);
+            z-index: 5;
+            line-height: 1.5;
+        }
+
+        #crosshair {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 22px;
+            height: 22px;
+            border: 2px solid rgba(0, 255, 255, 0.5);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        #crosshair::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 4px;
+            height: 4px;
+            background: #0ff;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Landing HUD */
+        #land-hud {
+            position: fixed;
+            bottom: 30%;
+            left: 50%;
+            transform: translateX(-50%);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            z-index: 20;
+        }
+
+        #land-btn {
+            background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+            color: #000;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.2em;
+            cursor: pointer;
+            border: 3px solid #fff;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.6);
+            transition: 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        #land-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 50px #0ff;
+        }
+
+        /* Mobile HUD */
+        #mobile-hud {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 10;
+        }
+
+        @media (pointer: coarse) {
+            #mobile-hud {
+                display: flex;
+            }
+
+            #instructions {
+                display: none;
+            }
+
+            #crosshair {
+                display: none;
+            }
+
+            #land-btn {
+                padding: 20px 50px;
+                font-size: 1.5em;
+            }
+        }
+
+        .hud-btn {
+            width: 70px;
+            height: 70px;
+            background: rgba(0, 255, 255, 0.2);
+            border: 2px solid #0ff;
+            border-radius: 50%;
+            color: #0ff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 28px;
+            font-weight: bold;
+            user-select: none;
+        }
+
+        .joystick-container {
+            position: fixed;
+            bottom: 40px;
+            width: 130px;
+            height: 130px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            display: none;
+            z-index: 10;
+            touch-action: none;
+        }
+
+        @media (pointer: coarse) {
+            .joystick-container {
+                display: block;
+            }
+        }
+
+        #joystick-left {
+            left: 40px;
+        }
+
+        .joystick-knob {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 60px;
+            height: 60px;
+            background: rgba(0, 255, 255, 0.5);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            box-shadow: 0 0 20px #0ff;
+        }
+
+        /* Vein Mind Map UI Overlay */
+        #ui-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(0, 10, 25, 0.95) 0%, rgba(0, 0, 0, 1) 100%);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            backdrop-filter: blur(20px);
+        }
+
+        .mind-map-container {
+            position: relative;
+            width: 95vw;
+            height: 95vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #vein-svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .node {
+            position: absolute;
+            width: 110px;
+            height: 110px;
+            background: rgba(0, 40, 80, 0.5);
+            border: 2px solid #0ff;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 0 25px rgba(0, 255, 255, 0.3);
+            font-weight: bold;
+            color: #0ff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.85em;
+        }
+
+        .node:hover {
+            transform: scale(1.15);
+            box-shadow: 0 0 45px #0ff;
+            background: rgba(0, 100, 150, 0.6);
+        }
+
+        .node.active {
+            background: #00ffff;
+            color: #000;
+            box-shadow: 0 0 60px #0ff;
+        }
+
+        #central-node {
+            width: 150px;
+            height: 150px;
+            font-size: 1.1em;
+            border-width: 4px;
+        }
+
+        #explanation-node {
+            top: 15%;
+            left: 15%;
+        }
+
+        #vocabulary-node {
+            bottom: 15%;
+            left: 15%;
+        }
+
+        #practice-node {
+            top: 50%;
+            right: 10%;
+            transform: translateY(-50%);
+            width: 130px;
+            height: 130px;
+        }
+
+        .content-panel {
+            position: absolute;
+            background: rgba(0, 20, 40, 0.9);
+            backdrop-filter: blur(30px);
+            border: 2px solid rgba(0, 255, 255, 0.5);
+            border-radius: 25px;
+            padding: 30px;
+            width: 480px;
+            display: none;
+            box-shadow: 0 0 60px rgba(0, 0, 0, 1);
+            overflow-y: auto;
+            z-index: 105;
+            max-height: 80vh;
+        }
+
+        .content-panel.active {
+            display: block;
+            animation: panelIn 0.5s ease forwards;
+        }
+
+        #explanation-content {
+            top: 10%;
+            left: 55%;
+        }
+
+        #vocabulary-content {
+            bottom: 12%;
+            left: 35%;
+        }
+
+        #practice-content {
+            top: 50%;
+            right: 5%;
+            transform: translateY(-50%);
+        }
+
+        .option-btn {
+            display: block;
+            width: 100%;
+            padding: 18px;
+            margin: 12px 0;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid #0ff;
+            color: #fff;
+            border-radius: 15px;
+            cursor: pointer;
+            text-align: left;
+            font-size: 1.1em;
+            transition: 0.3s;
+        }
+
+        .option-btn:hover {
+            background: rgba(0, 255, 255, 0.25);
+            transform: translateX(10px);
+        }
+
+        #close-ui {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            font-size: 3em;
+            cursor: pointer;
+            color: #ff4136;
+            z-index: 120;
+            text-shadow: 0 0 15px rgba(255, 65, 54, 0.8);
+            transition: 0.3s;
+        }
+
+        #close-ui:hover {
+            transform: rotate(90deg) scale(1.2);
+        }
+
+        .ar-text {
+            direction: rtl;
+            font-family: 'Arial', sans-serif;
+            font-size: 1.3em;
+            color: #a29bfe;
+            margin-top: 15px;
+        }
+
+        .vocab-item {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 15px;
+            margin: 8px 0;
+            border-radius: 15px;
+            border-left: 5px solid #0ff;
+        }
+
+        /* Feedback Bubble */
+        #feedback-bubble {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(238, 82, 83, 0.95);
+            color: white;
+            padding: 25px;
+            border-radius: 20px;
+            border: 3px solid #fff;
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.8);
+            max-width: 400px;
+            display: none;
+            text-align: center;
+            z-index: 200;
+            backdrop-filter: blur(10px);
+            animation: bounceIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes bounceIn {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) scale(0.5);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(-50%) scale(1);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="instructions">
+        <strong>Grammar Galaxy (360° Explorer)</strong><br>
+        WASD: Move | MWScroll: Zoom In/Out<br>
+        Approach & click <b>LAND ON PLANET</b><br>
+        <span style="color: #0ff;">360° Freedom: Look & fly in any direction.</span>
+    </div>
+
+    <div id="crosshair"></div>
+
+    <div id="land-hud">
+        <div id="land-btn">Land on Planet</div>
+    </div>
+
+    <div id="joystick-left" class="joystick-container">
+        <div class="joystick-knob"></div>
+    </div>
+    <div id="mobile-hud">
+        <div id="btn-up" class="hud-btn">▲</div>
+        <div id="btn-down" class="hud-btn">▼</div>
+    </div>
+
+    <div id="ui-overlay">
+        <span id="close-ui">&times;</span>
+        <div class="mind-map-container">
+            <svg id="vein-svg">
+                <path id="path-exp" d="" stroke="#0ff" stroke-width="4" fill="none" opacity="0.6" />
+                <path id="path-voc" d="" stroke="#0ff" stroke-width="4" fill="none" opacity="0.6" />
+                <path id="path-pra" d="" stroke="#0ff" stroke-width="4" fill="none" opacity="0.6" />
+            </svg>
+            <div id="central-node" class="node">Topic</div>
+            <div id="explanation-node" class="node" onclick="togglePanel('explanation')">Lesson</div>
+            <div id="vocabulary-node" class="node" onclick="togglePanel('vocabulary')">Vocab</div>
+            <div id="practice-node" class="node" onclick="togglePanel('practice')">Quiz</div>
+
+            <div id="explanation-content" class="content-panel"></div>
+            <div id="vocabulary-content" class="content-panel"></div>
+            <div id="practice-content" class="content-panel"></div>
+        </div>
+    </div>
+
+    <div id="feedback-bubble"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.min.js"></script>
+    <script>
+        const SYLLABUS = {
+            "planets": [
+                {
+                    "id": 1, "name": "Food Planet", "topic": "Ordering Food", "color": "#FF4136",
+                    "richExplanation": { "en": "Polite requests: Use 'I would like' or 'Can I get...'.", "ar": "الطلبات المهذبة: استخدم 'I would like' أو 'Can I get'." },
+                    "vocabulary": [{ "en": "Apple pie", "ar": "فطيرة تفاح" }, { "en": "Steak", "ar": "شريحة لحم" }],
+                    "practice": [{ "q": "How do you politely order an apple pie?", "options": ["Give me pie!", "I would like an apple pie, please.", "Want pie now."], "answer": 1, "feedback": { "en": "'I would like' is the polite standard.", "ar": "تعبير 'I would like' هو المعيار المهذب للطلب." } }]
+                },
+                {
+                    "id": 2, "name": "Routine Planet", "topic": "Adverbs of Frequency", "color": "#2ECC40",
+                    "richExplanation": { "en": "Frequency: Usually (80%), Often (60%). Position: Before main verb.", "ar": "التكرار: Usually (80%)، Often (60%). الموقع: قبل الفعل الأساسي." },
+                    "vocabulary": [{ "en": "Usually", "ar": "عادةً" }, { "en": "Often", "ar": "غالباً" }],
+                    "practice": [{ "q": "Where does 'usually' go? 'I ___ go to the gym.'", "options": ["usually", "go usually", "am usually"], "answer": 0, "feedback": { "en": "Adverbs go before the main verb 'go'.", "ar": "ظروف التكرار تأتي قبل الفعل الأساسي 'go'." } }]
+                },
+                {
+                    "id": 3, "name": "Action Planet", "topic": "Present Continuous", "color": "#0074D9",
+                    "richExplanation": { "en": "Ongoing actions: [Am/Is/Are] + [Verb-ing].", "ar": "الأفعال المستمرة: [Am/Is/Are] + [الفعل-ing]." },
+                    "vocabulary": [{ "en": "Making soup", "ar": "صنع الحساء" }],
+                    "practice": [{ "q": "What is the correct form? 'She ___ soup.'", "options": ["is making", "making", "make"], "answer": 0, "feedback": { "en": "Need 'is' + 'verb-ing' for continuous actions.", "ar": "نحتاج 'is' + 'verb-ing' للأفعال المستمرة." } }]
+                },
+                {
+                    "id": 4, "name": "Quantity Planet", "topic": "Quantifiers", "color": "#DDDDDD",
+                    "richExplanation": { "en": "Uncountable: Too much. Countable: Too many.", "ar": "غير المعدود: Too much. المعدود: Too many." },
+                    "vocabulary": [{ "en": "Too much", "ar": "كثير جداً (للكمية)" }],
+                    "practice": [{ "q": "Use a quantifier for 'water': 'There is ___ water.'", "options": ["too many", "too much", "a few"], "answer": 1, "feedback": { "en": "Water is uncountable, so use 'too much'.", "ar": "الماء غير معدود، لذا نستخدم 'too much'." } }]
+                },
+                {
+                    "id": 5, "name": "Ambition Planet", "topic": "Gerunds", "color": "#FFDC00",
+                    "richExplanation": { "en": "Gerunds (-ing) follow certain verbs like 'recommend'.", "ar": "صيغة المصدر (-ing) تتبع أفعالًا معينة مثل 'recommend'." },
+                    "vocabulary": [{ "en": "Recommend", "ar": "يوصي/يرشح" }],
+                    "practice": [{ "q": "Finish the sentence: 'I recommend ___ the story.'", "options": ["reading", "to read", "read"], "answer": 0, "feedback": { "en": "'Recommend' is followed by a gerund (-ing).", "ar": "فعل 'Recommend' يتبعه gerund (الفعل مضافاً له -ing)." } }]
+                },
+                {
+                    "id": 6, "name": "Location Planet", "topic": "Prepositions of Place", "color": "#85144b",
+                    "richExplanation": { "en": "Positions: Across from (opposite side).", "ar": "المواقع: Across from (الجانب المقابل)." },
+                    "vocabulary": [{ "en": "Across from", "ar": "مقابل/في الجهة الأخرى" }],
+                    "practice": [{ "q": "The bank is ___ the park. (On the other side)", "options": ["behind", "across from", "between"], "answer": 1, "feedback": { "en": "'Across from' means on the opposite side.", "ar": "تعبير 'Across from' يعني في الجهة المقابلة." } }]
+                },
+                {
+                    "id": 7, "name": "Story Planet", "topic": "Mohammed's Story", "color": "#B10DC9",
+                    "richExplanation": { "en": "Mohammed is active. He went on a vacation to the beach.", "ar": "محمد نشيط. ذهب في إجازة إلى الشاطئ." },
+                    "vocabulary": [{ "en": "Vacation", "ar": "إجازة" }],
+                    "practice": [{ "q": "Where did Mohammed go for his vacation?", "options": ["The mountains", "The beach", "The city"], "answer": 1, "feedback": { "en": "The text says he went to the beach.", "ar": "النص يذكر أنه ذهب إلى الشاطئ." } }]
+                }
+            ]
+        };
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 20000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // Skybox
+        const starGeo = new THREE.SphereGeometry(12000, 64, 64);
+        const starTex = new THREE.CanvasTexture((() => {
+            const c = document.createElement('canvas'); c.width = 2048; c.height = 1024; const ctx = c.getContext('2d');
+            ctx.fillStyle = '#000'; ctx.fillRect(0, 0, 2048, 1024);
+            for (let i = 0; i < 9000; i++) { ctx.fillStyle = `rgba(255,255,255,${Math.random()})`; ctx.beginPath(); ctx.arc(Math.random() * 2048, Math.random() * 1024, Math.random() * 1.2, 0, Math.PI * 2); ctx.fill(); }
+            return c;
+        })());
+        scene.add(new THREE.Mesh(starGeo, new THREE.MeshBasicMaterial({ map: starTex, side: THREE.BackSide })));
+
+        const sun = new THREE.Mesh(new THREE.SphereGeometry(80, 64, 64), new THREE.MeshStandardMaterial({ emissive: 0xff4500, emissiveIntensity: 2, color: 0xffcc00 }));
+        scene.add(sun);
+        const sunGlow = new THREE.PointLight(0xffffff, 6, 9000); scene.add(sunGlow);
+        scene.add(new THREE.AmbientLight(0x303030));
+
+        const planets = [];
+        SYLLABUS.planets.forEach((p, i) => {
+            const orbitDist = 600 + (i * 450);
+            const group = new THREE.Group();
+            const planetMesh = new THREE.Mesh(new THREE.SphereGeometry(45, 32, 32), new THREE.MeshStandardMaterial({ color: p.color, roughness: 0.7 }));
+            planetMesh.userData = { p }; group.add(planetMesh);
+
+            const ring = new THREE.Mesh(new THREE.TorusGeometry(80, 2, 2, 64), new THREE.MeshStandardMaterial({ color: p.color, transparent: true, opacity: 0.4 }));
+            ring.rotation.x = Math.PI / 2; group.add(ring);
+
+            const can = document.createElement('canvas'); can.width = 128; can.height = 128; const ctx = can.getContext('2d');
+            ctx.fillStyle = p.color; ctx.shadowBlur = 10; ctx.shadowColor = '#000'; ctx.font = 'Bold 85px Arial'; ctx.textAlign = 'center'; ctx.fillText(p.id, 64, 90);
+            const spr = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(can) }));
+            spr.scale.set(70, 70, 1); spr.position.y = 90; group.add(spr);
+
+            group.position.x = orbitDist; scene.add(group);
+            planets.push({ group, angle: Math.random() * Math.PI * 2, orbit: orbitDist, speed: 0.0015 / (i + 1), data: p });
+        });
+
+        // --- Interaction & Controls ---
+        let keys = {}, pitch = 0, yaw = 0, isUI = false, activePlanetObj = null;
+        let joyL = { x: 0, y: 0, active: false }, mElev = 0, zoom = 75;
+
+        document.addEventListener('keydown', e => keys[e.code] = true);
+        document.addEventListener('keyup', e => keys[e.code] = false);
+        window.addEventListener('wheel', e => { if (isUI) return; zoom = Math.max(30, Math.min(110, zoom + e.deltaY * 0.05)); camera.fov = zoom; camera.updateProjectionMatrix(); });
+
+        renderer.domElement.addEventListener('mousedown', () => { if (!isUI && document.pointerLockElement !== renderer.domElement) renderer.domElement.requestPointerLock(); });
+        document.addEventListener('mousemove', e => { if (document.pointerLockElement === renderer.domElement) { yaw -= e.movementX * 0.002; pitch = Math.max(-1.5, Math.min(1.5, pitch - e.movementY * 0.002)); } });
+
+        const landBtn = document.getElementById('land-btn');
+        landBtn.onclick = () => { if (activePlanetObj) openUI(activePlanetObj.data); };
+
+        function setupJoystick(id, data) {
+            const el = document.getElementById(id); const knob = el.querySelector('.joystick-knob'); const center = 65;
+            const handleTouch = (e) => {
+                const rect = el.getBoundingClientRect(); const touch = e.touches[0];
+                let dx = touch.clientX - (rect.left + center); let dy = touch.clientY - (rect.top + center);
+                const dist = Math.min(65, Math.sqrt(dx * dx + dy * dy)); const ang = Math.atan2(dy, dx);
+                dx = Math.cos(ang) * dist; dy = Math.sin(ang) * dist;
+                knob.style.transform = `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px))`;
+                data.x = dx / 65; data.y = dy / 65; data.active = true;
+            };
+            el.addEventListener('touchstart', e => { e.preventDefault(); handleTouch(e); });
+            el.addEventListener('touchmove', e => { e.preventDefault(); handleTouch(e); });
+            el.addEventListener('touchend', () => { knob.style.transform = 'translate(-50%, -50%)'; data.x = 0; data.y = 0; data.active = false; });
+        }
+        setupJoystick('joystick-left', joyL);
+        document.getElementById('btn-up').ontouchstart = () => mElev = 1; document.getElementById('btn-up').ontouchend = () => mElev = 0;
+        document.getElementById('btn-down').ontouchstart = () => mElev = -1; document.getElementById('btn-down').ontouchend = () => mElev = 0;
+
+        camera.position.set(0, 1000, 2500);
+
+        function updateController() {
+            if (isUI) return;
+            camera.quaternion.setFromEuler(new THREE.Euler(pitch, yaw, 0, 'YXZ'));
+            const move = new THREE.Vector3();
+            if (keys['KeyW']) move.z -= 1; if (keys['KeyS']) move.z += 1;
+            if (keys['KeyA']) move.x -= 1; if (keys['KeyD']) move.x += 1;
+            if (keys['Space']) move.y += 1; if (keys['ShiftLeft']) move.y -= 1;
+            if (joyL.active) { move.z += joyL.y; move.x += joyL.x; } move.y += mElev;
+            camera.position.addScaledVector(move.applyQuaternion(camera.quaternion), 18);
+
+            let near = null;
+            planets.forEach(p => { if (camera.position.distanceTo(p.group.position) < 220) near = p; });
+            activePlanetObj = near;
+            document.getElementById('land-hud').style.display = near ? 'flex' : 'none';
+        }
+
+        // --- UI & Feedback Bubble Logic ---
+        function showFeedback(feedback) {
+            const bubble = document.getElementById('feedback-bubble');
+            bubble.innerHTML = `<strong>Feedback:</strong><br>${feedback.en}<hr class="ar-text" style="color:#fff; opacity:0.3;">${feedback.ar}`;
+            bubble.style.display = 'block';
+            setTimeout(() => { bubble.style.display = 'none'; }, 5000);
+        }
+
+        function openUI(data) {
+            isUI = true; document.exitPointerLock();
+            document.getElementById('ui-overlay').style.display = 'flex';
+            document.getElementById('central-node').innerText = data.name;
+            togglePanel('explanation'); drawVeins();
+        }
+        function closeUI() {
+            isUI = false;
+            document.getElementById('ui-overlay').style.display = 'none';
+            document.getElementById('feedback-bubble').style.display = 'none';
+            zoom = 75; camera.fov = zoom; camera.updateProjectionMatrix();
+            if (activePlanetObj) {
+                const dir = new THREE.Vector3().subVectors(camera.position, activePlanetObj.group.position).normalize();
+                camera.position.addScaledVector(dir, 200);
+            }
+        }
+        document.getElementById('close-ui').onclick = closeUI;
+
+        function togglePanel(type) {
+            document.querySelectorAll('.content-panel, .node').forEach(el => el.classList.remove('active'));
+            document.getElementById(type + '-node').classList.add('active');
+            const panel = document.getElementById(type + '-content'); panel.classList.add('active');
+            const p = activePlanetObj.data;
+            if (type === 'explanation') panel.innerHTML = `<h2>${p.topic}</h2><p>${p.richExplanation.en}</p><div class="ar-text">${p.richExplanation.ar}</div>`;
+            else if (type === 'vocabulary') panel.innerHTML = `<h2>Vocabulary</h2>` + p.vocabulary.map(v => `<div class="vocab-item"><strong>${v.en}</strong><br>${v.ar}</div>`).join('');
+            else if (type === 'practice') { const q = p.practice[0]; panel.innerHTML = `<h2>Quiz</h2><p>${q.q}</p>` + q.options.map((o, i) => `<button class="option-btn" onclick="checkAnswer(${i}, ${q.answer}, ${JSON.stringify(q.feedback).replace(/"/g, '&quot;')})">${o}</button>`).join(''); }
+        }
+
+        function checkAnswer(idx, correct, feedback) {
+            if (idx === correct) {
+                alert("Excellent! Mission accomplished on this planet.");
+                closeUI();
+            } else {
+                showFeedback(feedback);
+            }
+        }
+
+        function drawVeins() {
+            const root = document.getElementById('central-node').getBoundingClientRect();
+            const cx = root.left + root.width / 2, cy = root.top + root.height / 2;
+            ['explanation', 'vocabulary', 'practice'].forEach(id => {
+                const node = document.getElementById(id + '-node').getBoundingClientRect();
+                const nx = node.left + node.width / 2, ny = node.top + node.height / 2;
+                document.getElementById('path-' + id.substring(0, 3)).setAttribute('d', `M ${cx} ${cy} C ${cx + (nx - cx) / 2} ${cy}, ${cx + (nx - cx) / 2} ${ny}, ${nx} ${ny}`);
+            });
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            updateController();
+            if (!isUI) {
+                sun.rotation.y += 0.003;
+                planets.forEach(p => { p.angle += p.speed; p.group.position.x = Math.cos(p.angle) * p.orbit; p.group.position.z = Math.sin(p.angle) * p.orbit; });
+            }
+            renderer.render(scene, camera);
+        }
+        window.onresize = () => { renderer.setSize(window.innerWidth, window.innerHeight); camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix(); if (isUI) drawVeins(); };
+        animate();
+    </script>
+</body>
+
+</html>
