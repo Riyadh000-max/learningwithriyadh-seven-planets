@@ -1,0 +1,436 @@
+{
+  "planets": [
+    {
+      "id": 1,
+      "name": "The Food Planet",
+      "style": "Red Cratered",
+      "topic": "Food Categories & Ordering",
+      "richExplanation": {
+        "en": "Countable nouns (apples, sandwiches) can be counted individually and have plural forms. Uncountable nouns (water, bread, rice) are for substances or liquids and don't have plural forms. Use 'a glass of' or 'a bottle of' for uncountables.",
+        "ar": "الأسماء المعدودة (تفاح، ساندويتشات) يمكن عدها ولها صيغة جمع. الأسماء غير المعدودة (ماء، خبز، أرز) للمواد أو السوائل وليس لها صيغة جمع. استخدم 'كوب من' أو 'زجاجة من' للأسماء غير المعدودة."
+      },
+      "feedback": {
+        "q1_wrong": {
+          "en": "Incorrect. Salad is a vegetable dish. Apple pie is sweet, so it is a dessert.",
+          "ar": "خطأ. السلطة طبق خضار. فطيرة التفاح حلوة، لذا هي من الحلويات."
+        },
+        "q2_wrong": {
+          "en": "Incorrect. We say 'a glass OF water' to show content. 'In' means inside.",
+          "ar": "خطأ. نقول 'glass of water' لتحديد المحتوى. 'In' تعني في الداخل."
+        }
+      },
+      "vocabulary": [
+        {
+          "en": "Apple pie",
+          "ar": "فطيرة تفاح"
+        },
+        {
+          "en": "Soft drinks",
+          "ar": "مشروبات غازية"
+        },
+        {
+          "en": "Green salad",
+          "ar": "سلطة خضراء"
+        },
+        {
+          "en": "Steak",
+          "ar": "شريحة لحم"
+        },
+        {
+          "en": "Main course",
+          "ar": "طبق رئيسي"
+        }
+      ],
+      "practice": [
+        {
+          "id": "q1",
+          "q": "It's a type of deserts:",
+          "options": [
+            "Salad",
+            "Soup",
+            "Pasta",
+            "Apple pie"
+          ],
+          "answer": 3
+        },
+        {
+          "id": "q2",
+          "q": "I'd like a glass ___ water.",
+          "options": [
+            "from",
+            "on",
+            "in",
+            "of"
+          ],
+          "answer": 3
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "The Routine Planet",
+      "style": "Green Forest",
+      "topic": "Present Simple & Adverbs of Frequency",
+      "richExplanation": {
+        "en": "Adverbs like 'Always', 'Usually', and 'Often' show frequency. Placement: 1. Before main verb (He usually walks). 2. After Verb 'To Be' (He is always late). 3. Between Modal and Verb (He can often attend).",
+        "ar": "ظروف مثل 'دائماً'، 'عادة'، 'غالباً' توضح التكرار. الترتيب: 1. قبل الفعل الأساسي. 2. بعد فعل 'To Be'. 3. بين الفعل المساعد والفعل الأساسي."
+      },
+      "feedback": {
+        "q1_wrong": {
+          "en": "Incorrect. Nurses work in hospitals. Teachers work in classrooms with webcams.",
+          "ar": "خطأ. الممرضات يعملن في المستشفيات. المعلمون يعملون في الفصول."
+        },
+        "q2_wrong": {
+          "en": "Incorrect. 'One' is a number (1). 'Once' means 'one time'.",
+          "ar": "خطأ. 'One' هو رقم. 'Once' تعني مرة واحدة."
+        }
+      },
+      "vocabulary": [
+        {
+          "en": "Usually",
+          "ar": "عادة"
+        },
+        {
+          "en": "Often",
+          "ar": "غالبا"
+        },
+        {
+          "en": "Once a week",
+          "ar": "مرة في الأسبوع"
+        },
+        {
+          "en": "Free time",
+          "ar": "وقت الفراغ"
+        }
+      ],
+      "practice": [
+        {
+          "id": "q1",
+          "q": "Teachers ___ usually use webcams.",
+          "options": [
+            "Teachers",
+            "Nurses",
+            "Farmers",
+            "businessmen"
+          ],
+          "answer": 0
+        },
+        {
+          "id": "q2",
+          "q": "I work out ___ a week.",
+          "options": [
+            "one",
+            "once",
+            "two",
+            "three"
+          ],
+          "answer": 1
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "The Action Planet",
+      "style": "Blue Water",
+      "topic": "Present Continuous & Phrasal Verbs",
+      "richExplanation": {
+        "en": "Spelling rules for -ing: 1. Most verbs: Just add -ing. 2. Ends in 'e': Drop 'e' (make -> making). 3. Ends in 'ie': Change to 'y' (lie -> lying). 4. Short double CVC (run -> running).",
+        "ar": "قواعد هجاء -ing: 1. معظم الأفعال: أضف -ing. 2. ينتهي بـ 'e': احذف 'e'. 3. ينتهي بـ 'ie': حولها لـ 'y'. 4. مضاعفة الحرف الأخير في الأفعال القصيرة (run -> running)."
+      },
+      "feedback": {
+        "q1_wrong": {
+          "en": "Incorrect. You 'make' food. You cannot 'break' soup.",
+          "ar": "خطأ. أنت 'تعد' الطعام. لا يمكنك 'كسر' الحساء."
+        },
+        "q2_wrong": {
+          "en": "Incorrect. The phrasal verb 'run away' means to escape.",
+          "ar": "خطأ. الفعل المركب 'run away' يعني يهرب."
+        }
+      },
+      "vocabulary": [
+        {
+          "en": "Hanging out",
+          "ar": "يتسكع"
+        },
+        {
+          "en": "Making soup",
+          "ar": "يصنع حساء"
+        },
+        {
+          "en": "Running away",
+          "ar": "يهرب"
+        }
+      ],
+      "practice": [
+        {
+          "id": "q1",
+          "q": "My sister is ___ a soup.",
+          "options": [
+            "breaking",
+            "writing",
+            "talking",
+            "making"
+          ],
+          "answer": 3
+        },
+        {
+          "id": "q2",
+          "q": "The thieves are running ___.",
+          "options": [
+            "away",
+            "close",
+            "on",
+            "come"
+          ],
+          "answer": 0
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "The Quantity Planet",
+      "style": "Giant Gas",
+      "topic": "Quantifiers (Too / Much / Some)",
+      "richExplanation": {
+        "en": "'Too' implies excessive amount (often negative). 'Much' is for uncountable (much water). 'Many' is for countable (many cars). 'Some' is used in positive sentences, while 'Any' is for negatives/questions.",
+        "ar": "'Too' تعني زيادة مفرطة (غالباً سلبية). 'Much' لغير المعدود. 'Many' للمعدود. نستخدم 'some' في الجمل المثبتة، و 'any' للنفي والسؤال."
+      },
+      "feedback": {
+        "q1_wrong": {
+          "en": "Incorrect. 'Many' is for things we count. 'Too' is for adjectives like 'salty'.",
+          "ar": "خطأ. 'Many' للمعدود. 'Too' للصفات مثل مالح."
+        },
+        "q2_wrong": {
+          "en": "Incorrect. We use 'some' in positive sentences. 'Any' is for questions or negatives.",
+          "ar": "خطأ. نستخدم 'some' في الجمل المثبتة. 'Any' للنفي والسؤال."
+        }
+      },
+      "vocabulary": [
+        {
+          "en": "Too much",
+          "ar": "كثير جدا"
+        },
+        {
+          "en": "Salty",
+          "ar": "مالح"
+        },
+        {
+          "en": "Juice",
+          "ar": "عصير"
+        }
+      ],
+      "practice": [
+        {
+          "id": "q1",
+          "q": "The soup is ___ salty.",
+          "options": [
+            "too",
+            "many",
+            "much",
+            "to"
+          ],
+          "answer": 0
+        },
+        {
+          "id": "q2",
+          "q": "There is ___ juice.",
+          "options": [
+            "some",
+            "any",
+            "are",
+            "of"
+          ],
+          "answer": 0
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "The Ambition Planet",
+      "style": "Saturn-like Ringed",
+      "topic": "Gerunds vs Infinitives",
+      "richExplanation": {
+        "en": "Gerunds (-ing) act like nouns (Enjoy running). Infinitives (to + verb) often express purpose or intention (Want to go). Specific verbs like 'Recommend' require Gerunds, while 'Want' requires Infinitives.",
+        "ar": "Gerunds (-ing) تعمل كأسماء. Infinitives (to + verb) تعبر عن الغرض أو النية. أفعال معينة مثل 'Recommend' تتطلب Gerunds، بينما 'Want' تتطلب Infinitives."
+      },
+      "feedback": {
+        "q1_wrong": {
+          "en": "Incorrect. The verb 'recommend' is always followed by -ing (Gerund).",
+          "ar": "خطأ. الفعل 'recommend' يتبعه دائماً فعل مضاف له ing."
+        },
+        "q2_wrong": {
+          "en": "Incorrect. After 'want', we must use 'to' + verb.",
+          "ar": "خطأ. بعد 'want'، يجب أن نستخدم 'to' + الفعل."
+        }
+      },
+      "vocabulary": [
+        {
+          "en": "Recommend",
+          "ar": "يوصي"
+        },
+        {
+          "en": "Want to be",
+          "ar": "يريد أن يكون"
+        },
+        {
+          "en": "Know how",
+          "ar": "يعرف كيف"
+        }
+      ],
+      "practice": [
+        {
+          "id": "q1",
+          "q": "I recommend ___ basketball.",
+          "options": [
+            "playing",
+            "plays",
+            "play",
+            "played"
+          ],
+          "answer": 0
+        },
+        {
+          "id": "q2",
+          "q": "I want ___ an engineer.",
+          "options": [
+            "to be",
+            "be",
+            "is",
+            "are"
+          ],
+          "answer": 0
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "The Locator Planet",
+      "style": "Small Rocky Asteroid",
+      "topic": "Prepositions & Relative Pronouns",
+      "richExplanation": {
+        "en": "Relative pronouns: 'Who' is for people, 'Which' is for things/animals, 'Where' is for places. Prepositions like 'Across from' show relative location (opposite side).",
+        "ar": "ضمائر الوصل: 'Who' للأشخاص، 'Which' للأشياء/الحيوانات، 'Where' للأماكن. حروف الجر مثل 'Across from' توضح المكان النسبي (الجانب المقابل)."
+      },
+      "feedback": {
+        "q1_wrong": {
+          "en": "Incorrect. 'On' means touching the surface. The park is on the other side, so 'across from'.",
+          "ar": "خطأ. 'On' تعني على السطح. الحديقة في الجانب المقابل."
+        },
+        "q2_wrong": {
+          "en": "Incorrect. 'Who' is for people. A company is a thing, so we use 'which'.",
+          "ar": "خطأ. 'Who' للناس. الشركة شيء، لذا نستخدم 'which'."
+        }
+      },
+      "vocabulary": [
+        {
+          "en": "Across from",
+          "ar": "مقابل"
+        },
+        {
+          "en": "Behind",
+          "ar": "خلف"
+        },
+        {
+          "en": "Which",
+          "ar": "الذي"
+        }
+      ],
+      "practice": [
+        {
+          "id": "q1",
+          "q": "The park is ___ the school.",
+          "options": [
+            "across from",
+            "on",
+            "between",
+            "in"
+          ],
+          "answer": 0
+        },
+        {
+          "id": "q2",
+          "q": "A company ___ builds roads.",
+          "options": [
+            "which",
+            "who",
+            "why",
+            "what"
+          ],
+          "answer": 0
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "name": "The Story Planet",
+      "style": "Purple Mystery",
+      "topic": "Reading Comprehension",
+      "richExplanation": {
+        "en": "Reading strategies: 1. Predicting (guess from title). 2. Skimming (read fast for main idea). 3. Scanning (look for specific names/numbers). 4. Summarizing (short version of the text).",
+        "ar": "استراتيجيات القراءة: 1. التنبؤ. 2. القراءة السريعة (الفكرة العامة). 3. البحث (معلومات محددة). 4. التلخيص (نسخة قصيرة من النص)."
+      },
+      "readingText": "Mohammed feels tired lately. He thinks he is too busy. He plays basketball for his school team. He also works three nights a week as a cashier at a grocery store. He works on Mondays, Wednesdays, and Saturdays. At home, he does his studies and homework. Mohammed wants more free time. He is very happy because he has a vacation next week!",
+      "feedback": {
+        "q1_wrong": {
+          "en": "Incorrect. The text says: 'he plays basketball for his school team'.",
+          "ar": "خطأ. النص يقول: يلعب لفريق المدرسة."
+        },
+        "q2_wrong": {
+          "en": "Incorrect. The text says: 'He works three nights a week'.",
+          "ar": "خطأ. النص يقول: يعمل ثلاث ليالٍ."
+        },
+        "q3_wrong": {
+          "en": "Incorrect. The text says: 'He thinks he is too busy'.",
+          "ar": "خطأ. النص يقول: يعتقد أنه مشغول جداً."
+        }
+      },
+      "vocabulary": [
+        {
+          "en": "Tired",
+          "ar": "مُتعب"
+        },
+        {
+          "en": "Busy",
+          "ar": "مشغول"
+        },
+        {
+          "en": "Cashier",
+          "ar": "صراف"
+        },
+        {
+          "en": "Vacation",
+          "ar": "إجازة"
+        }
+      ],
+      "practice": [
+        {
+          "id": "q1",
+          "q": "Who does Mohammed play basketball for?",
+          "options": [
+            "School team",
+            "Friends"
+          ],
+          "answer": 0
+        },
+        {
+          "id": "q2",
+          "q": "How many nights does he work?",
+          "options": [
+            "Three",
+            "Two"
+          ],
+          "answer": 0
+        },
+        {
+          "id": "q3",
+          "q": "Why does he feel tired?",
+          "options": [
+            "He is too busy",
+            "He is not busy"
+          ],
+          "answer": 0
+        }
+      ]
+    }
+  ]
+}

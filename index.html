@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Grammar Galaxy: 360° Explorer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Inter', sans-serif;
+            background: #000;
+            color: #fff;
+        }
+
+        canvas {
+            display: block;
+        }
+
+        /* HUD & Controls */
+        #crosshair {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 24px;
+            height: 24px;
+            border: 2px solid rgba(0, 255, 255, 0.6);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        #info-panel {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 15px 20px;
+            border-radius: 12px;
+            border: 1px solid #0ff;
+            backdrop-filter: blur(10px);
+            font-size: 0.85em;
+            pointer-events: none;
+            line-height: 1.5;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+        }
+
+        /* Organic Vein UI */
+        #ui-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(circle at center, rgba(0, 20, 40, 0.95) 0%, rgba(0, 0, 0, 0.98) 100%);
+            z-index: 100;
+        }
+
+        .mind-map-container {
+            width: 95%;
+            height: 95%;
+            position: relative;
+        }
+
+        #vein-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+            filter: drop-shadow(0 0 5px #0ff);
+        }
+
+        .node {
+            position: absolute;
+            background: rgba(0, 40, 60, 0.9);
+            border: 2px solid #0ff;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+            color: #0ff;
+            font-weight: 700;
+            z-index: 10;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .node:hover {
+            transform: scale(1.15);
+            box-shadow: 0 0 35px rgba(0, 255, 255, 0.5);
+            background: rgba(0, 60, 90, 1);
+        }
+
+        .node.active {
+            background: #00ffff !important;
+            color: #000 !important;
+            box-shadow: 0 0 40px #0ff;
+        }
+
+        #central-node {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 140px;
+            height: 140px;
+            font-size: 1.1em;
+            border-width: 4px;
+        }
+
+        #explanation-node {
+            top: 25%;
+            left: 35%;
+            width: 100px;
+            height: 100px;
+        }
+
+        #vocabulary-node {
+            bottom: 25%;
+            left: 35%;
+            width: 100px;
+            height: 100px;
+        }
+
+        #practice-node {
+            top: 50%;
+            right: 25%;
+            transform: translateY(-50%);
+            width: 120px;
+            height: 120px;
+        }
+
+        .content-panel {
+            position: absolute;
+            background: rgba(0, 30, 50, 0.4);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 20px;
+            padding: 30px;
+            width: 450px;
+            display: none;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+            max-height: 75%;
+            overflow-y: auto;
+            z-index: 20;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .content-panel.active {
+            display: block;
+        }
+
+        #explanation-panel {
+            top: 15%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 650px;
+        }
+
+        #vocabulary-panel {
+            bottom: 15%;
+            left: 5%;
+        }
+
+        #practice-panel {
+            top: 50%;
+            right: 5%;
+            transform: translateY(-50%);
+        }
+
+        /* Feedback Bubble */
+        #feedback-bubble {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(238, 82, 83, 0.95);
+            color: white;
+            padding: 25px;
+            border-radius: 18px;
+            border: 2px solid #fff;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+            max-width: 550px;
+            display: none;
+            text-align: center;
+            z-index: 200;
+            backdrop-filter: blur(10px);
+        }
+
+        .play-btn {
+            background: #00d2d3;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 15px;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .play-btn:hover {
+            background: #01a3a4;
+            transform: translateY(-2px);
+        }
+
+        .option-btn {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            margin: 12px 0;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 255, 255, 0.4);
+            color: #fff;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: left;
+            font-size: 1em;
+            transition: 0.3s;
+        }
+
+        .option-btn:hover {
+            background: rgba(0, 255, 255, 0.15);
+            border-color: #0ff;
+        }
+
+        .correct {
+            background: #1dd1a1 !important;
+            color: #000 !important;
+            border-color: #fff !important;
+            font-weight: bold;
+        }
+
+        .wrong {
+            background: #ee5253 !important;
+            border-color: #fff !important;
+        }
+
+        #close-ui {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            font-size: 2.5em;
+            cursor: pointer;
+            color: #0ff;
+            z-index: 110;
+            transition: 0.2s;
+        }
+
+        #close-ui:hover {
+            transform: rotate(90deg) scale(1.2);
+        }
+
+        .vocab-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            margin-bottom: 8px;
+            border-radius: 10px;
+            border: 1px solid rgba(0, 255, 255, 0.1);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="crosshair"></div>
+    <div id="info-panel">
+        <strong>6DoF NAVIGATOR</strong><br>
+        W / S: Thrust Forward/Back<br>
+        A / D: Strafe Left/Right<br>
+        Space / Shift: Ascend / Descend<br>
+        <strong>Mouse:</strong> Look & Steering
+    </div>
+
+    <div id="ui-overlay">
+        <span id="close-ui">&times;</span>
+        <div class="mind-map-container">
+            <canvas id="vein-canvas"></canvas>
+            <div id="central-node" class="node">Topic</div>
+            <div id="explanation-node" class="node" onclick="showPanel('explanation')">Explanation</div>
+            <div id="vocabulary-node" class="node" onclick="showPanel('vocabulary')">Vocabulary</div>
+            <div id="practice-node" class="node" onclick="showPanel('practice')">Practice</div>
+
+            <div id="explanation-panel" class="content-panel"></div>
+            <div id="vocabulary-panel" class="content-panel"></div>
+            <div id="practice-panel" class="content-panel"></div>
+        </div>
+    </div>
+
+    <div id="feedback-bubble"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <script id="sun-vs" type="x-shader/x-vertex">
+        varying vec2 vUv;
+        varying vec3 vNormal;
+        void main() {
+            vUv = uv;
+            vNormal = normalize(normalMatrix * normal);
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+    </script>
+    <script id="sun-fs" type="x-shader/x-fragment">
+        uniform float time;
+        varying vec2 vUv;
+        varying vec3 vNormal;
+
+        float noise(vec2 p) {
+            return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453);
+        }
+
+        void main() {
+            vec2 p = vUv * 8.0;
+            float n = noise(p + time * 0.05) * 0.5 + noise(p * 2.0 - time * 0.1) * 0.25;
+            vec3 color = mix(vec3(1.0, 0.2, 0.0), vec3(1.0, 0.8, 0.1), n * 1.5);
+            float rim = 1.0 - max(dot(vNormal, vec3(0.0, 0.0, 1.0)), 0.0);
+            color += vec3(1.0, 0.4, 0.0) * pow(rim, 4.0);
+            gl_FragColor = vec4(color, 1.0);
+        }
+    </script>
+
+    <script>
+        // --- Full Syllabus Data ---
+        const SYLLABUS = {
+            "planets": [
+                {
+                    "id": 1, "name": "Food Planet", "topic": "Food Categories & Ordering",
+                    "richExplanation": {
+                        "en": "Countable nouns (apples, sandwiches) can be counted. Uncountable (water, bread) are substances. Use 'a glass of' for uncountables.",
+                        "ar": "الأسماء المعدودة يمكن عدها. غير المعدودة للمواد. استخدم 'كوب من' لغير المعدود."
+                    },
+                    "vocabulary": [{ "en": "Apple pie", "ar": "فطيرة تفاح" }, { "en": "Soft drinks", "ar": "مشروبات غازية" }, { "en": "Green salad", "ar": "سلطة خضراء" }],
+                    "practice": [
+                        { "q": "It's a type of deserts:", "options": ["Salad", "Apple pie"], "answer": 1, "feedback": { "en": "Salad is vegetables. Apple pie is sweet dessert.", "ar": "السلطة خضار. فطيرة التفاح حلوى." } },
+                        { "q": "I'd like a glass ___ water.", "options": ["in", "of"], "answer": 1, "feedback": { "en": "We say 'glass OF water' for content.", "ar": "نقول 'glass of water' للمحتوى." } }
+                    ]
+                },
+                {
+                    "id": 2, "name": "Routine Planet", "topic": "Adverbs of Frequency",
+                    "richExplanation": {
+                        "en": "Adverbs (Always, Often) go BEFORE main verbs but AFTER the verb 'To Be'.",
+                        "ar": "ظروف التكرار تأتي قبل الفعل الأساسي وبعد فعل To Be."
+                    },
+                    "vocabulary": [{ "en": "Usually", "ar": "عادة" }, { "en": "Often", "ar": "غالباً" }],
+                    "practice": [
+                        { "q": "I ___ wake up early.", "options": ["always", "is always"], "answer": 0, "feedback": { "en": "Put 'always' before the verb 'wake'.", "ar": "ضع always قبل الفعل wake." } }
+                    ]
+                },
+                {
+                    "id": 3, "name": "Action Planet", "topic": "Present Continuous",
+                    "richExplanation": {
+                        "en": "Use am/is/are + verb-ing. Drop 'e' for verbs like 'make' -> 'making'.",
+                        "ar": "استخدم am/is/are + verb-ing. احذف 'e' في أفعال مثل making."
+                    },
+                    "vocabulary": [{ "en": "Running", "ar": "ركض" }, { "en": "Making", "ar": "صنع" }],
+                    "practice": [
+                        { "q": "She is ___ a cake.", "options": ["makeing", "making"], "answer": 1, "feedback": { "en": "Drop the silent 'e' before adding -ing.", "ar": "احذف حرف 'e' الصامت قبل إضافة -ing." } }
+                    ]
+                },
+                {
+                    "id": 4, "name": "Quantity Planet", "topic": "Quantifiers",
+                    "richExplanation": {
+                        "en": "'Too' means excessive. 'Much' for uncountable, 'Many' for countable.",
+                        "ar": "'Too' تعني مفرط. 'Much' لغير المعدود و'Many' للمعدود."
+                    },
+                    "vocabulary": [{ "en": "Too much", "ar": "كثير جداً" }, { "en": "Many", "ar": "عديد" }],
+                    "practice": [
+                        { "q": "There is ___ salt.", "options": ["too much", "too many"], "answer": 0, "feedback": { "en": "Salt is uncountable, so use 'much'.", "ar": "الملح غير معدود، لذا استخدم much." } }
+                    ]
+                },
+                {
+                    "id": 5, "name": "Ambition Planet", "topic": "Gerunds vs Infinitives",
+                    "richExplanation": {
+                        "en": "Some verbs take -ing (Enjoy swimming). Others take 'to' (Want to go).",
+                        "ar": "بعض الأفعال يلحقها -ing وبعضها يلحقها 'to' والمصدر."
+                    },
+                    "vocabulary": [{ "en": "Recommend", "ar": "يوصي" }, { "en": "Plan to", "ar": "يخطط لـ" }],
+                    "practice": [
+                        { "q": "I want ___ a doctor.", "options": ["being", "to be"], "answer": 1, "feedback": { "en": "After 'want', use 'to' + verb.", "ar": "بعد 'want'، استخدم 'to' والفعل." } }
+                    ]
+                },
+                {
+                    "id": 6, "name": "Locator Planet", "topic": "Relative Pronouns",
+                    "richExplanation": {
+                        "en": "'Who' for people, 'Which' for things, 'Where' for places.",
+                        "ar": "'Who' للناس، 'Which' للأشياء، 'Where' للأماكن."
+                    },
+                    "vocabulary": [{ "en": "Across from", "ar": "مقابل" }, { "en": "Which", "ar": "الذي" }],
+                    "practice": [
+                        { "q": "The boy ___ is singing.", "options": ["who", "which"], "answer": 0, "feedback": { "en": "'Boy' is a person, use 'who'.", "ar": "الولد إنسان، استخدم 'who'." } }
+                    ]
+                },
+                {
+                    "id": 7, "name": "Story Planet", "topic": "Reading Strategies",
+                    "richExplanation": {
+                        "en": "Predicting helps guess the topic. Summarizing helps remember main points.",
+                        "ar": "التنبؤ يساعد على تخمين الموضوع. التلخيص يساعد على تذكر النقاط."
+                    },
+                    "vocabulary": [{ "en": "Skimming", "ar": "قراءة سريعة" }, { "en": "Predicting", "ar": "تنبؤ" }],
+                    "practice": [
+                        { "q": "Read fast for main idea:", "options": ["Scanning", "Skimming"], "answer": 1, "feedback": { "en": "Skimming is for the main idea.", "ar": "Skimming هي للحصول على الفكرة العامة." } }
+                    ]
+                }
+            ]
+        };
+
+        // --- Game Logic ---
+        let scene, camera, renderer, sun;
+        let pObjects = [];
+        let keys = {};
+        let isUIOpen = false, currentPlanetData = null;
+        let pitch = 0, yaw = 0;
+        let lastTime = 0;
+
+        init();
+
+        function init() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 10000);
+            camera.position.set(0, 100, 600);
+
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.setClearColor(0x000005);
+            document.body.appendChild(renderer.domElement);
+
+            // Controls
+            window.addEventListener('keydown', e => keys[e.code] = true);
+            window.addEventListener('keyup', e => keys[e.code] = false);
+            renderer.domElement.addEventListener('click', () => { if (!isUIOpen) document.body.requestPointerLock(); });
+            document.addEventListener('mousemove', e => {
+                if (document.pointerLockElement === document.body) {
+                    yaw -= e.movementX * 0.0015;
+                    pitch -= e.movementY * 0.0015;
+                    pitch = Math.max(-1.5, Math.min(1.5, pitch));
+                }
+            });
+
+            createSpace();
+            createSun();
+            createGalaxy();
+            animate(0);
+        }
+
+        function createSpace() {
+            const starGeo = new THREE.BufferGeometry();
+            const pos = [];
+            for (let i = 0; i < 10000; i++) {
+                pos.push((Math.random() - 0.5) * 15000, (Math.random() - 0.5) * 15000, (Math.random() - 0.5) * 15000);
+            }
+            starGeo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+            scene.add(new THREE.Points(starGeo, new THREE.PointsMaterial({ color: 0xffffff, size: 2, transparent: true, opacity: 0.8 })));
+            scene.add(new THREE.AmbientLight(0xffffff, 0.4));
+        }
+
+        function createSun() {
+            sun = new THREE.Mesh(
+                new THREE.SphereGeometry(80, 64, 64),
+                new THREE.ShaderMaterial({
+                    uniforms: { time: { value: 0 } },
+                    vertexShader: document.getElementById('sun-vs').textContent,
+                    fragmentShader: document.getElementById('sun-fs').textContent
+                })
+            );
+            scene.add(sun);
+            const pLight = new THREE.PointLight(0xff9900, 3, 5000, 1);
+            sun.add(pLight);
+        }
+
+        function createGalaxy() {
+            const col = [0xff4757, 0x2ed573, 0x1e90ff, 0xff9f43, 0xfeca57, 0x54a0ff, 0xa29bfe];
+            SYLLABUS.planets.forEach((p, i) => {
+                const orb = 400 + i * 250;
+                const size = 45 + Math.random() * 15;
+                const group = new THREE.Group();
+
+                // Planet with Toon Material
+                const pMesh = new THREE.Mesh(new THREE.SphereGeometry(size, 32, 32), new THREE.MeshToonMaterial({ color: col[i] }));
+                group.add(pMesh);
+
+                // Carved Number Marker
+                const marker = makeMarker((i + 1).toString(), col[i]);
+                marker.position.y = size + 15;
+                group.add(marker);
+
+                // Rings
+                const rGeo = new THREE.TorusGeometry(size + 20, 1.5, 4, 100);
+                const rMat = new THREE.MeshBasicMaterial({ color: col[i], transparent: true, opacity: 0.3 });
+                const ring = new THREE.Mesh(rGeo, rMat);
+                ring.rotation.x = Math.PI / 2 + (Math.random() - 0.5) * 0.5;
+                group.add(ring);
+
+                // Entry Zone
+                const zone = new THREE.Mesh(new THREE.SphereGeometry(size + 60, 32, 32), new THREE.MeshBasicMaterial({ color: col[i], transparent: true, opacity: 0.05, side: THREE.BackSide }));
+                group.add(zone);
+
+                const angle = (i / 7) * Math.PI * 2;
+                group.position.set(Math.cos(angle) * orb, 0, Math.sin(angle) * orb);
+                group.userData = { id: p.id, data: p, radius: orb, angle: angle, speed: 0.001 - i * 0.0001, triggerRange: size + 60 };
+
+                scene.add(group);
+                pObjects.push(group);
+            });
+        }
+
+        function makeMarker(txt, col) {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = 256; canvas.height = 256;
+            ctx.fillStyle = '#' + col.toString(16).padStart(6, '0');
+            ctx.font = 'bold 160px Inter';
+            ctx.textAlign = 'center';
+            ctx.shadowColor = '#fff'; ctx.shadowBlur = 20;
+            ctx.fillText(txt, 128, 180);
+            const tex = new THREE.CanvasTexture(canvas);
+            const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex }));
+            sprite.scale.set(60, 60, 1);
+            return sprite;
+        }
+
+        function animate(t) {
+            requestAnimationFrame(animate);
+            const dt = (t - lastTime) * 0.001;
+            lastTime = t;
+
+            if (!isUIOpen) {
+                // 6DoF Movement
+                camera.quaternion.setFromEuler(new THREE.Euler(pitch, yaw, 0, 'YXZ'));
+                const dir = new THREE.Vector3();
+                if (keys['KeyW']) dir.z -= 1; if (keys['KeyS']) dir.z += 1;
+                if (keys['KeyA']) dir.x -= 1; if (keys['KeyD']) dir.x += 1;
+                if (keys['Space']) dir.y += 1; if (keys['ShiftLeft']) dir.y -= 1;
+                dir.applyQuaternion(camera.quaternion);
+                camera.position.addScaledVector(dir, 12);
+
+                pObjects.forEach(p => {
+                    p.userData.angle += p.userData.speed;
+                    p.position.set(Math.cos(p.userData.angle) * p.userData.radius, 0, Math.sin(p.userData.angle) * p.userData.radius);
+                    p.rotation.y += 0.01;
+                    if (camera.position.distanceTo(p.position) < p.userData.triggerRange) openUI(p.userData.data);
+                });
+            }
+
+            sun.material.uniforms.time.value = t * 0.001;
+            renderer.render(scene, camera);
+        }
+
+        // --- UI & Interaction ---
+        function openUI(data) {
+            currentPlanetData = data;
+            isUIOpen = true;
+            document.exitPointerLock();
+            document.getElementById('ui-overlay').style.display = 'flex';
+            document.getElementById('central-node').innerText = data.name;
+            drawVeins();
+            showPanel('explanation');
+        }
+
+        function showPanel(type) {
+            document.querySelectorAll('.content-panel, .node').forEach(el => el.classList.remove('active'));
+            document.getElementById(type + '-panel').classList.add('active');
+            document.getElementById(type + '-node').classList.add('active');
+
+            const p = currentPlanetData;
+            if (type === 'explanation') {
+                document.getElementById('explanation-panel').innerHTML = `<h2>MODULE: ${p.topic}</h2><p>${p.richExplanation.en}</p><p dir="rtl" style="font-size:1.2em; font-family:Arial;">${p.richExplanation.ar}</p>`;
+            } else if (type === 'vocabulary') {
+                document.getElementById('vocabulary-panel').innerHTML = `<h3>WORD NODES</h3>${p.vocabulary.map(v => `<div class="vocab-item"><div><strong>${v.en}</strong><br><small>${v.ar}</small></div><button class="play-btn" onclick="speak('${v.en}')">🔊</button></div>`).join('')}`;
+            } else if (type === 'practice') {
+                renderQuiz(0);
+            }
+        }
+
+        function renderQuiz(idx) {
+            const q = currentPlanetData.practice[idx];
+            if (!q) {
+                document.getElementById('practice-panel').innerHTML = "<h3>✓ Planet Explored!</h3><p>Knowledge integrity stabilized.</p>";
+                return;
+            }
+            document.getElementById('practice-panel').innerHTML = `<h3>SKILL TEST (${idx + 1}/${currentPlanetData.practice.length})</h3><p>${q.q}</p>${q.options.map((opt, i) => `<button class="option-btn" onclick="checkAnswer(${idx}, ${i}, ${q.answer}, this)">${opt}</button>`).join('')}`;
+        }
+
+        function checkAnswer(qIdx, sel, correct, btn) {
+            if (sel === correct) {
+                btn.classList.add('correct');
+                pulseVeins();
+                setTimeout(() => renderQuiz(qIdx + 1), 1000);
+            } else {
+                btn.classList.add('wrong');
+                const feedback = currentPlanetData.practice[qIdx].feedback;
+                const bub = document.getElementById('feedback-bubble');
+                bub.innerHTML = `<strong>ANALYSIS:</strong> ${feedback.en}<br><small>${feedback.ar}</small>`;
+                bub.style.display = 'block';
+                speak(feedback.en);
+                setTimeout(() => bub.style.display = 'none', 5000);
+            }
+        }
+
+        function drawVeins() {
+            const cvs = document.getElementById('vein-canvas');
+            const ctx = cvs.getContext('2d');
+            cvs.width = window.innerWidth; cvs.height = window.innerHeight;
+            ctx.strokeStyle = '#00ffff'; ctx.lineWidth = 3; ctx.shadowBlur = 10; ctx.shadowColor = '#0ff';
+
+            const root = document.getElementById('central-node').getBoundingClientRect();
+            const rx = root.left + root.width / 2, ry = root.top + root.height / 2;
+
+            ['explanation', 'vocabulary', 'practice'].forEach(id => {
+                const node = document.getElementById(id + '-node').getBoundingClientRect();
+                const nx = node.left + node.width / 2, ny = node.top + node.height / 2;
+                ctx.beginPath();
+                ctx.moveTo(rx, ry);
+                ctx.bezierCurveTo(rx + (nx - rx) / 2, ry, rx + (nx - rx) / 2, ny, nx, ny);
+                ctx.stroke();
+            });
+        }
+
+        function pulseVeins() {
+            const cvs = document.getElementById('vein-canvas');
+            cvs.style.filter = 'drop-shadow(0 0 15px #0ff) brightness(2.5)';
+            setTimeout(() => cvs.style.filter = 'drop-shadow(0 0 5px #0ff)', 600);
+        }
+
+        function speak(t) { window.speechSynthesis.speak(new SpeechSynthesisUtterance(t)); }
+        document.getElementById('close-ui').onclick = () => { isUIOpen = false; document.getElementById('ui-overlay').style.display = 'none'; };
+        window.onresize = () => { camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth, window.innerHeight); if (isUIOpen) drawVeins(); };
+    </script>
+</body>
+
+</html>
